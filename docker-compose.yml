@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  cassandra1:
+    image: cassandra:latest
+    container_name: cassandra1
+    networks:
+      cassandra_net:
+        ipv4_address: 192.168.1.200
+
+  cassandra2:
+    image: cassandra:latest
+    container_name: cassandra2
+    networks:
+      cassandra_net:
+        ipv4_address: 192.168.1.201
+
+  cassandra3:
+    image: cassandra:latest
+    container_name: cassandra3
+    networks:
+      cassandra_net:
+        ipv4_address: 192.168.1.202
+
+networks:
+  cassandra_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
