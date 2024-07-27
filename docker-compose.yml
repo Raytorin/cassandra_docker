@@ -7,6 +7,33 @@ services:
     networks:
       cassandra_net:
         ipv4_address: 192.168.1.200
+    hostname: cassandra1
+    ports:
+      - "9042:9042"
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9142
+    environment:
+      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+      - NUM_TOKENS=3
+      - DC=DC1
+      - DS_LINSE=accept
+      - RACK=RAC1
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=200M
+      - START_RPC=false
+    ulimits:
+      memlock: -1
+      nproc: 32768
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '0.5'
 
   cassandra2:
     image: cassandra:latest
@@ -14,6 +41,35 @@ services:
     networks:
       cassandra_net:
         ipv4_address: 192.168.1.201
+    hostname: cassandra2
+    ports:
+      - "9043:9042"
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9142
+    environment:
+      - CASSANDRA_SEEDS=cassandra1, cassandra2
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+      - NUM_TOKENS=3
+      - DC=DC2
+      - DS_LINSE=accept
+      - RACK=RAC1
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=200M
+      - START_RPC=false
+    ulimits:
+      memlock: -1
+      nproc: 32768
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '0.5'
+    depends_on:
+      - cassandra1
 
   cassandra3:
     image: cassandra:latest
@@ -21,10 +77,43 @@ services:
     networks:
       cassandra_net:
         ipv4_address: 192.168.1.202
+    hostname: cassandra3
+    ports:
+      - "9044:9042"
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9142
+    environment:
+      - CASSANDRA_SEEDS=cassandra1, cassandra3
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+      - NUM_TOKENS=3
+      - DC=DC2
+      - DS_LINSE=accept
+      - RACK=RAC1
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=200M
+      - START_RPC=false
+    ulimits:
+      memlock: -1
+      nproc: 32768
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '0.5'
+    depends_on:
+      - cassandra1
+      - cassandra2
 
 networks:
   cassandra_net:
-    driver: bridge
+    driver: macvlan
+    driver_opts:
+      parent: wlp0s20f3
     ipam:
+      driver: default
       config:
         - subnet: 192.168.1.0/24
