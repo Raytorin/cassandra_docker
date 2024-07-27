@@ -1,7 +1,43 @@
-version: '3.8'
+version: '3.9'
+
+x-cassandra-parameters: &cassandra-parameters
+  image: cassandra:latest
+  environment:
+    - CASSANDRA_SEEDS=cassandra1
+    - CASSANDRA_CLUSTER_NAME=MyCluster
+    - NUM_TOKENS=3
+    - DC=DC1
+    - DS_LINSE=accept
+    - RACK=RAC1
+    - MAX_HEAP_SIZE=1G
+    - HEAP_NEWSIZE=200M
+    - START_RPC=false
+  expose:
+    - 7000
+    - 7001
+    - 7199
+    - 9042
+    - 9142
+  networks:
+    cassandra_net:
+      ipv4_address:
+  ulimits:
+    memlock: -1
+    nproc: 32768 # to explore this, there may be a lot
+  deploy:
+    resources:
+      limits:
+        memory: 4G
+        cpus: '0.5'
+  healthcheck:
+    test: ["CMD", "cqlsh", "-e", "describe keyspaces"] # maybe another command, think more
+    interval: 30s
+    timeout: 20s
+    retries: 3
 
 services:
   cassandra1:
+    <<: *cassandra-parameters
     image: cassandra:latest
     container_name: cassandra1
     networks:
@@ -10,32 +46,12 @@ services:
     hostname: cassandra1
     ports:
       - "9042:9042"
-    expose:
-      - 7000
-      - 7001
-      - 7199
-      - 9042
-      - 9142
     environment:
       - CASSANDRA_SEEDS=cassandra1
-      - CASSANDRA_CLUSTER_NAME=MyCluster
-      - NUM_TOKENS=3
       - DC=DC1
-      - DS_LINSE=accept
-      - RACK=RAC1
-      - MAX_HEAP_SIZE=1G
-      - HEAP_NEWSIZE=200M
-      - START_RPC=false
-    ulimits:
-      memlock: -1
-      nproc: 32768
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-          cpus: '0.5'
 
   cassandra2:
+    <<: *cassandra-parameters
     image: cassandra:latest
     container_name: cassandra2
     networks:
@@ -44,34 +60,14 @@ services:
     hostname: cassandra2
     ports:
       - "9043:9042"
-    expose:
-      - 7000
-      - 7001
-      - 7199
-      - 9042
-      - 9142
     environment:
       - CASSANDRA_SEEDS=cassandra1, cassandra2
-      - CASSANDRA_CLUSTER_NAME=MyCluster
-      - NUM_TOKENS=3
       - DC=DC2
-      - DS_LINSE=accept
-      - RACK=RAC1
-      - MAX_HEAP_SIZE=1G
-      - HEAP_NEWSIZE=200M
-      - START_RPC=false
-    ulimits:
-      memlock: -1
-      nproc: 32768
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-          cpus: '0.5'
     depends_on:
       - cassandra1
 
   cassandra3:
+    <<: *cassandra-parameters
     image: cassandra:latest
     container_name: cassandra3
     networks:
@@ -80,37 +76,16 @@ services:
     hostname: cassandra3
     ports:
       - "9044:9042"
-    expose:
-      - 7000
-      - 7001
-      - 7199
-      - 9042
-      - 9142
     environment:
       - CASSANDRA_SEEDS=cassandra1, cassandra3
-      - CASSANDRA_CLUSTER_NAME=MyCluster
-      - NUM_TOKENS=3
       - DC=DC2
-      - DS_LINSE=accept
-      - RACK=RAC1
-      - MAX_HEAP_SIZE=1G
-      - HEAP_NEWSIZE=200M
-      - START_RPC=false
-    ulimits:
-      memlock: -1
-      nproc: 32768
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-          cpus: '0.5'
     depends_on:
       - cassandra1
       - cassandra2
 
 networks:
   cassandra_net:
-    driver: macvlan
+    driver: macvlan # or bridge, read more about it
     driver_opts:
       parent: wlp0s20f3
     ipam:
