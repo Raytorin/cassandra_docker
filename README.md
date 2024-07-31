@@ -46,3 +46,5 @@ cqlsh 192.168.1.202
 ### Скриншот работоспособной машины
 
 ![Скриншот]()
+
+![GitHub](https://img.shields.io/github/license/Raytorin/cassandra_docker)
