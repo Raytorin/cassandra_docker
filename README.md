@@ -13,14 +13,18 @@
 git clone https://github.com/Raytorin/cassandra_docker.git
 ```
 
-2. Зайдите корневую папку 
+2. Требуемые библиотеки
+- docker-compose
+- Docker
+- cassandra
+
 ```
-cd cassandra_docker
+pip install -r requirements.txt
 ```
 
-3. Создание и настройка Docker сети
+3. Зайдите корневую папку 
 ```
-docker network create --subnet=192.168.1.0/24 cassandra_net
+cd cassandra_docker
 ```
 
 4. Развертывание кластера Cassandra
@@ -42,9 +46,5 @@ cqlsh 192.168.2.201
 
 cqlsh 192.168.2.202
 ```
-
-### Скриншот работоспособной машины
-
-![Скриншот]()
 
 ![GitHub](https://img.shields.io/github/license/Raytorin/cassandra_docker)
