@@ -19,11 +19,10 @@ x-cassandra-parameters: &cassandra-parameters
     - 9042
     - 9142
   networks:
-    cassandra_net:
-      ipv4_address:
+    - cassandra_net
   ulimits:
     memlock: -1
-    nproc: 32768
+    nproc: 8192
   deploy:
     resources:
       limits:
@@ -34,15 +33,17 @@ x-cassandra-parameters: &cassandra-parameters
     interval: 30s
     timeout: 20s
     retries: 3
+  volumes:
+    - cassandra-data:/var/lib/cassandra
+  restart: unless-stopped
 
 services:
   cassandra1:
     <<: *cassandra-parameters
-    image: cassandra:latest
     container_name: cassandra1
     networks:
       cassandra_net:
-        ipv4_address: 192.168.1.200
+        ipv4_address: 192.168.2.200
     hostname: cassandra1
     ports:
       - "9042:9042"
@@ -52,11 +53,10 @@ services:
 
   cassandra2:
     <<: *cassandra-parameters
-    image: cassandra:latest
     container_name: cassandra2
     networks:
       cassandra_net:
-        ipv4_address: 192.168.1.201
+        ipv4_address: 192.168.2.201
     hostname: cassandra2
     ports:
       - "9043:9042"
@@ -68,11 +68,10 @@ services:
 
   cassandra3:
     <<: *cassandra-parameters
-    image: cassandra:latest
     container_name: cassandra3
     networks:
       cassandra_net:
-        ipv4_address: 192.168.1.202
+        ipv4_address: 192.168.2.202
     hostname: cassandra3
     ports:
       - "9044:9042"
@@ -89,4 +88,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 192.168.1.0/24
+        - subnet: 192.168.2.0/24
+
+volumes:
+  cassandra-data:
