@@ -22,7 +22,7 @@ git clone https://github.com/Raytorin/cassandra_docker.git
 pip install -r requirements.txt
 ```
 
-3. Зайдите корневую папку 
+3. Зайдите в корневую папку 
 ```
 cd cassandra_docker
 ```
