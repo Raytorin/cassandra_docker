@@ -3,10 +3,8 @@ version: '3.9'
 x-cassandra-parameters: &cassandra-parameters
   image: cassandra:latest
   environment:
-    - CASSANDRA_SEEDS=cassandra1
     - CASSANDRA_CLUSTER_NAME=MyCluster
     - NUM_TOKENS=3
-    - DC=DC1
     - DS_LINSE=accept
     - RACK=RAC1
     - MAX_HEAP_SIZE=512M
@@ -46,6 +44,10 @@ services:
     hostname: cassandra1
     ports:
       - "9042:9042"
+      - "7000:7000"
+      - "7001:7001"
+      - "7199:7199"
+      - "9142:9142"
     environment:
       - CASSANDRA_SEEDS=cassandra1
       - DC=DC1
@@ -59,6 +61,10 @@ services:
     hostname: cassandra2
     ports:
       - "9043:9042"
+      - "7002:7000"
+      - "7003:7001"
+      - "7200:7199"
+      - "9143:9142"
     environment:
       - CASSANDRA_SEEDS=cassandra1, cassandra2
       - DC=DC2
@@ -74,6 +80,10 @@ services:
     hostname: cassandra3
     ports:
       - "9044:9042"
+      - "7004:7000"
+      - "7005:7001"
+      - "7201:7199"
+      - "9144:9142"
     environment:
       - CASSANDRA_SEEDS=cassandra1, cassandra3
       - DC=DC2
