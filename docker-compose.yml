@@ -8,7 +8,7 @@ x-cassandra-parameters: &cassandra-parameters
     - DS_LINSE=accept
     - RACK=RAC1
     - MAX_HEAP_SIZE=512M
-    - HEAP_NEWSIZE=100M
+    - HEAP_NEWSIZE=200M
     - START_RPC=false
   expose:
     - 7000
@@ -24,8 +24,8 @@ x-cassandra-parameters: &cassandra-parameters
   deploy:
     resources:
       limits:
-        memory: 1G
-        cpus: '0.2'
+        memory: 4G
+        cpus: '0.5'
   healthcheck:
     test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
     interval: 30s
@@ -95,7 +95,6 @@ networks:
   cassandra_net:
     driver: bridge
     ipam:
-      driver: default
       config:
         - subnet: 192.168.2.0/24
 
