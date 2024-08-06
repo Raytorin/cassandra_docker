@@ -9,7 +9,7 @@ x-cassandra-parameters: &cassandra-parameters
     - RACK=RAC1
     - MAX_HEAP_SIZE=512M
     - HEAP_NEWSIZE=200M
-    - START_RPC=false
+    - START_RPC=true
   expose:
     - 7000
     - 7001
@@ -49,8 +49,12 @@ services:
       - "7199:7199"
       - "9142:9142"
     environment:
-      - CASSANDRA_SEEDS=cassandra1
       - DC=DC1
+      - CASSANDRA_SEEDS=192.168.0.145
+      - CASSANDRA_LISTEN_ADDRESS=192.168.2.200
+      - CASSANDRA_BROADCAST_ADDRESS=192.168.0.145
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=192.168.0.145
 
   cassandra2:
     <<: *cassandra-parameters
@@ -66,8 +70,13 @@ services:
       - "7200:7199"
       - "9143:9142"
     environment:
-      - CASSANDRA_SEEDS=cassandra1, cassandra2
+#      - CASSANDRA_SEEDS=cassandra1, cassandra2
       - DC=DC2
+      - CASSANDRA_SEEDS=192.168.0.145
+      - CASSANDRA_LISTEN_ADDRESS=192.168.2.201
+      - CASSANDRA_BROADCAST_ADDRESS=192.168.0.145
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=192.168.0.145
     depends_on:
       - cassandra1
 
@@ -85,8 +94,13 @@ services:
       - "7201:7199"
       - "9144:9142"
     environment:
-      - CASSANDRA_SEEDS=cassandra1, cassandra3
+#      - CASSANDRA_SEEDS=cassandra1, cassandra3
       - DC=DC2
+      - CASSANDRA_SEEDS=192.168.0.145
+      - CASSANDRA_LISTEN_ADDRESS=192.168.2.202
+      - CASSANDRA_BROADCAST_ADDRESS=192.168.0.145
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=192.168.0.145
     depends_on:
       - cassandra1
       - cassandra2
